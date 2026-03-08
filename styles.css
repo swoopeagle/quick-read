@@ -44,30 +44,6 @@
   white-space: nowrap;
 }
 
-/* Arm toggle button */
-#rsvp-ribbon button.arm-btn {
-  background: #3A3A3C;
-  color: #A1A1AA;
-  border: 1px solid #48484A;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-family: system-ui, sans-serif;
-  font-size: 0.8rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-#rsvp-ribbon button.arm-btn.armed {
-  background: rgba(74, 144, 217, 0.15);
-  color: #4A90D9;
-  border-color: #4A90D9;
-}
-
-#rsvp-ribbon button.arm-btn:hover:not(.armed) {
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #F5F5F5;
-}
 
 #rsvp-ribbon button.minimize {
   background: transparent;

@@ -46,7 +46,6 @@
   let isPlaying     = false;
   let shadowRoot    = null;
   let ribbonStateBeforeFullscreen = null;
-  let armedForFullscreen = false;  // must be explicitly armed before fullscreen triggers overlay
 
   // ── Shadow DOM host ──────────────────────────────────────────
   let shadowHost = null;
@@ -75,15 +74,12 @@
         <span class="ribbon-logo">⚡</span>
         <span class="ribbon-name">Quick Read</span>
       </div>
-      <button class="arm-btn" id="rsvp-arm-btn">Arm</button>
+      <button class="cta" id="rsvp-enter-btn">Enter Quick Read</button>
       <button class="minimize">—</button>
     `;
 
-    ribbon.querySelector('#rsvp-arm-btn').addEventListener('click', () => {
-      armedForFullscreen = !armedForFullscreen;
-      const btn = ribbon.querySelector('#rsvp-arm-btn');
-      btn.textContent = armedForFullscreen ? 'Armed ✓' : 'Arm';
-      btn.classList.toggle('armed', armedForFullscreen);
+    ribbon.querySelector('#rsvp-enter-btn').addEventListener('click', () => {
+      enterQuickRead();
     });
 
     ribbon.querySelector('button.minimize').addEventListener('click', () => {
@@ -760,35 +756,25 @@
      FULLSCREEN LISTENER
      ============================================================= */
 
-  document.addEventListener('fullscreenchange', () => {
-    if (document.fullscreenElement) {
-      // Only activate if the user explicitly armed Quick Read
-      if (!armedForFullscreen) return;
+  function enterQuickRead() {
+    ribbonStateBeforeFullscreen = getRibbonState();
+    hideRibbonAndPill();
+    document.documentElement.style.overflow = 'hidden';
 
-      // Disarm immediately — each fullscreen session requires a fresh arm
-      armedForFullscreen = false;
-      const armBtn = ribbon && ribbon.querySelector('#rsvp-arm-btn');
-      if (armBtn) {
-        armBtn.textContent = 'Arm';
-        armBtn.classList.remove('armed');
-      }
+    // Request fullscreen for immersion — overlay shows regardless of whether it's granted
+    document.documentElement.requestFullscreen().catch(() => {});
 
-      // Record ribbon state before hiding
-      ribbonStateBeforeFullscreen = getRibbonState();
-      hideRibbonAndPill();
-
-      // Suppress page scroll during overlay
-      document.documentElement.style.overflow = 'hidden';
-
-      // Extract and build (at this exact moment — SPA-safe)
-      const article = extractArticle();
-      if (article) {
-        buildOverlay(article);
-      } else {
-        buildEmptyOverlayWithError();
-      }
+    const article = extractArticle();
+    if (article) {
+      buildOverlay(article);
     } else {
-      // Fullscreen exited — only tear down if we actually built an overlay
+      buildEmptyOverlayWithError();
+    }
+  }
+
+  // Only used to clean up when the user exits fullscreen (Escape / browser chrome)
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
       if (shadowHost && shadowRoot && shadowRoot.querySelector('#reader-overlay')) {
         teardownOverlay();
         restoreRibbonToPreviousState();
