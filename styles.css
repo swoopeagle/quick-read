@@ -270,12 +270,9 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 1.5rem 1.5rem;
-  gap: 12px;
+  padding: 1rem 1.5rem 1.5rem;
   background: #2C2C2E;
   border-top: 1px solid #48484A;
-  padding-top: 1rem;
 }
 
 #btn-slower,
@@ -337,10 +334,20 @@
   flex-shrink: 0;
 }
 
-.wpm-group {
+/* Tight cluster: [−] [input] WPM [+] */
+.speed-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Takes remaining space, centers the play/pause button within it */
+.play-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ============================================================

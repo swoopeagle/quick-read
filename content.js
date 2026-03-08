@@ -688,13 +688,15 @@
         <div id="rsvp-word"></div>
       </div>
       <div id="controls">
-        <button id="btn-slower" title="Slower (−${WPM_STEP} WPM)">−</button>
-        <div class="wpm-group">
+        <div class="speed-group">
+          <button id="btn-slower" title="Slower (−${WPM_STEP} WPM)">−</button>
           <input id="wpm-input" type="number" min="${WPM_MIN}" max="${WPM_MAX}" value="${wpm}" />
           <span class="wpm-label">WPM</span>
+          <button id="btn-faster" title="Faster (+${WPM_STEP} WPM)">+</button>
         </div>
-        <button id="btn-faster" title="Faster (+${WPM_STEP} WPM)">+</button>
-        <button id="btn-playpause">▶</button>
+        <div class="play-wrapper">
+          <button id="btn-playpause">▶</button>
+        </div>
       </div>
     `;
     overlay.appendChild(rightPanel);
