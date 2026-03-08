@@ -46,6 +46,7 @@
   let isPlaying     = false;
   let shadowRoot    = null;
   let ribbonStateBeforeFullscreen = null;
+  let armedForFullscreen = false;  // must be explicitly armed before fullscreen triggers overlay
 
   // ── Shadow DOM host ──────────────────────────────────────────
   let shadowHost = null;
@@ -70,14 +71,19 @@
     ribbon = document.createElement('div');
     ribbon.id = 'rsvp-ribbon';
     ribbon.innerHTML = `
-      <span class="ribbon-logo">⚡</span>
-      <span class="ribbon-text">Enter fullscreen to speed read</span>
-      <button class="cta">Enter Fullscreen</button>
+      <div class="ribbon-left">
+        <span class="ribbon-logo">⚡</span>
+        <span class="ribbon-name">Quick Read</span>
+      </div>
+      <button class="arm-btn" id="rsvp-arm-btn">Arm</button>
       <button class="minimize">—</button>
     `;
 
-    ribbon.querySelector('button.cta').addEventListener('click', () => {
-      document.documentElement.requestFullscreen().catch(() => {});
+    ribbon.querySelector('#rsvp-arm-btn').addEventListener('click', () => {
+      armedForFullscreen = !armedForFullscreen;
+      const btn = ribbon.querySelector('#rsvp-arm-btn');
+      btn.textContent = armedForFullscreen ? 'Armed ✓' : 'Arm';
+      btn.classList.toggle('armed', armedForFullscreen);
     });
 
     ribbon.querySelector('button.minimize').addEventListener('click', () => {
@@ -756,6 +762,17 @@
 
   document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) {
+      // Only activate if the user explicitly armed Quick Read
+      if (!armedForFullscreen) return;
+
+      // Disarm immediately — each fullscreen session requires a fresh arm
+      armedForFullscreen = false;
+      const armBtn = ribbon && ribbon.querySelector('#rsvp-arm-btn');
+      if (armBtn) {
+        armBtn.textContent = 'Arm';
+        armBtn.classList.remove('armed');
+      }
+
       // Record ribbon state before hiding
       ribbonStateBeforeFullscreen = getRibbonState();
       hideRibbonAndPill();
@@ -768,13 +785,14 @@
       if (article) {
         buildOverlay(article);
       } else {
-        // Build empty overlay with error
         buildEmptyOverlayWithError();
       }
     } else {
-      // Fullscreen exited
-      teardownOverlay();
-      restoreRibbonToPreviousState();
+      // Fullscreen exited — only tear down if we actually built an overlay
+      if (shadowHost && shadowRoot && shadowRoot.querySelector('#reader-overlay')) {
+        teardownOverlay();
+        restoreRibbonToPreviousState();
+      }
     }
   });
 

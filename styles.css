@@ -4,22 +4,32 @@
 
 #rsvp-ribbon {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 8px;
+  right: 12px;
+  left: auto;
+  width: 25vw;
   height: 44px;
   background: #1C1C1E;
   color: #F5F5F5;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  justify-content: space-between;
+  padding: 0 12px;
+  gap: 10px;
   font-family: system-ui, sans-serif;
   font-size: 0.9rem;
   z-index: 999998;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid #48484A;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  border: 1px solid #48484A;
+  border-radius: 8px;
   transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#rsvp-ribbon .ribbon-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 #rsvp-ribbon .ribbon-logo {
@@ -27,44 +37,54 @@
   color: #4A90D9;
 }
 
-#rsvp-ribbon .ribbon-text {
+#rsvp-ribbon .ribbon-name {
+  color: #F5F5F5;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Arm toggle button */
+#rsvp-ribbon button.arm-btn {
+  background: #3A3A3C;
   color: #A1A1AA;
-  font-size: 0.85rem;
-}
-
-#rsvp-ribbon button.cta {
-  background: #4A90D9;
-  color: #ffffff;
-  border: none;
-  padding: 6px 16px;
+  border: 1px solid #48484A;
+  padding: 4px 12px;
   border-radius: 4px;
-  font-weight: bold;
   font-family: system-ui, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: background 0.15s ease;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-#rsvp-ribbon button.cta:hover {
-  background: #6AABF0;
+#rsvp-ribbon button.arm-btn.armed {
+  background: rgba(74, 144, 217, 0.15);
+  color: #4A90D9;
+  border-color: #4A90D9;
+}
+
+#rsvp-ribbon button.arm-btn:hover:not(.armed) {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #F5F5F5;
 }
 
 #rsvp-ribbon button.minimize {
   background: transparent;
-  color: #F5F5F5;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 2px 10px;
+  color: #A1A1AA;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 2px 8px;
   border-radius: 4px;
   font-family: system-ui, sans-serif;
   font-size: 0.85rem;
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 12px;
-  transition: border-color 0.15s ease;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 #rsvp-ribbon button.minimize:hover {
-  border-color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #F5F5F5;
 }
 
 /* ============================================================
