@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Split-Screen RSVP Reader",
+  "version": "1.0",
+  "description": "Speed-read articles in fullscreen with synchronized highlighting and RSVP.",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["readability.js", "content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["readability.js", "styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

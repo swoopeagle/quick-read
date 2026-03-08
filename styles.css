@@ -1,0 +1,402 @@
+/* ============================================================
+   RIBBON — injected into main document (not Shadow DOM)
+   ============================================================ */
+
+#rsvp-ribbon {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  background: #1C1C1E;
+  color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  z-index: 999998;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #48484A;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#rsvp-ribbon .ribbon-logo {
+  font-size: 1.1rem;
+  color: #4A90D9;
+}
+
+#rsvp-ribbon .ribbon-text {
+  color: #A1A1AA;
+  font-size: 0.85rem;
+}
+
+#rsvp-ribbon button.cta {
+  background: #4A90D9;
+  color: #ffffff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+#rsvp-ribbon button.cta:hover {
+  background: #6AABF0;
+}
+
+#rsvp-ribbon button.minimize {
+  background: transparent;
+  color: #F5F5F5;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 12px;
+  transition: border-color 0.15s ease;
+}
+
+#rsvp-ribbon button.minimize:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================
+   PILL — injected into main document (not Shadow DOM)
+   ============================================================ */
+
+#rsvp-pill {
+  position: fixed;
+  right: 0;
+  top: 25vh;
+  width: 36px;
+  height: 64px;
+  background: #1C1C1E;
+  color: #4A90D9;
+  border: 1px solid #48484A;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 999998;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.25);
+  transition: width 0.2s ease;
+}
+
+#rsvp-pill:hover {
+  width: 44px;
+}
+
+#rsvp-pill .tooltip {
+  position: absolute;
+  right: 48px;
+  background: #1C1C1E;
+  color: #F5F5F5;
+  font-family: system-ui, sans-serif;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #48484A;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+#rsvp-pill:hover .tooltip {
+  opacity: 1;
+}
+
+/* ============================================================
+   SHADOW DOM HOST — zero footprint in main document
+   ============================================================ */
+
+#rsvp-host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+/* ============================================================
+   OVERLAY — lives inside Shadow DOM
+   ============================================================ */
+
+#reader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #1C1C1E;
+  z-index: 999999;
+  font-family: Georgia, serif;
+  pointer-events: all;
+}
+
+/* Image mode: collapse to single column */
+#reader-overlay.image-mode {
+  grid-template-columns: 1fr;
+}
+
+/* ============================================================
+   LEFT PANEL
+   ============================================================ */
+
+#left-panel {
+  overflow-y: scroll;
+  padding: 2rem;
+  color: #F5F5F5;
+  background: #1C1C1E;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  scroll-behavior: smooth;
+}
+
+#left-panel h1,
+#left-panel h2,
+#left-panel h3,
+#left-panel h4 {
+  color: #F5F5F5;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+#left-panel p {
+  margin-bottom: 1rem;
+}
+
+#left-panel img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+#left-panel figure {
+  margin: 1rem 0;
+}
+
+#left-panel figcaption {
+  font-size: 0.85rem;
+  color: #A1A1AA;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* ============================================================
+   WORD SPANS
+   ============================================================ */
+
+.word {
+  display: inline;
+  border-radius: 3px;
+  padding: 0 1px;
+  transition: background-color 0.05s ease;
+  cursor: default;
+}
+
+.word.highlighted {
+  background-color: rgba(74, 144, 217, 0.20);
+  outline: 1px solid #4A90D9;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   RIGHT PANEL
+   ============================================================ */
+
+#right-panel {
+  background: #2C2C2E;
+  border-left: 1px solid #48484A;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* ============================================================
+   RSVP DISPLAY
+   ============================================================ */
+
+#rsvp-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+#rsvp-word {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #F5F5F5;
+  font-family: Georgia, serif;
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  word-break: break-word;
+  max-width: 90%;
+}
+
+#rsvp-word .focal-letter {
+  color: #4A90D9;
+  font-weight: 900;
+}
+
+#rsvp-word.done {
+  color: #F5F5F5;
+  font-size: 2rem;
+  font-weight: normal;
+}
+
+/* ============================================================
+   CONTROLS BAR
+   ============================================================ */
+
+#controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem 1.5rem;
+  gap: 12px;
+  background: #2C2C2E;
+  border-top: 1px solid #48484A;
+  padding-top: 1rem;
+}
+
+#btn-slower,
+#btn-faster,
+#btn-playpause {
+  background: #3A3A3C;
+  color: #F5F5F5;
+  border: 1px solid #48484A;
+  border-radius: 6px;
+  font-family: system-ui, sans-serif;
+  font-size: 1.1rem;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+#btn-slower:hover,
+#btn-faster:hover,
+#btn-playpause:hover {
+  background: #4A90D9;
+  color: #ffffff;
+  border-color: #4A90D9;
+}
+
+#wpm-input {
+  background: #3A3A3C;
+  color: #F5F5F5;
+  border: 1px solid #48484A;
+  border-radius: 6px;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  width: 64px;
+  height: 40px;
+  text-align: center;
+  padding: 0 4px;
+  -moz-appearance: textfield;
+}
+
+#wpm-input::-webkit-outer-spin-button,
+#wpm-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#wpm-input:focus {
+  border-color: #4A90D9;
+  outline: none;
+}
+
+.wpm-label {
+  color: #A1A1AA;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.wpm-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ============================================================
+   IMAGE DISPLAY MODE (inside overlay)
+   ============================================================ */
+
+#image-display {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #1C1C1E;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  z-index: 10;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#image-display img {
+  max-height: 70vh;
+  max-width: 80vw;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+#image-display figcaption,
+#image-display .img-caption {
+  color: #A1A1AA;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  max-width: 60vw;
+}
+
+#btn-continue {
+  background: #4A90D9;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+#btn-continue:hover {
+  background: #6AABF0;
+}
