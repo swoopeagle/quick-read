@@ -44,6 +44,28 @@
   white-space: nowrap;
 }
 
+/* Reset host-page button styles before applying ours */
+#rsvp-ribbon button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+}
+
+#rsvp-ribbon button.cta {
+  background: #4A90D9;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+#rsvp-ribbon button.cta:hover {
+  background: #6AABF0;
+}
 
 #rsvp-ribbon button.minimize {
   background: transparent;
@@ -51,9 +73,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 2px 8px;
   border-radius: 4px;
-  font-family: system-ui, sans-serif;
   font-size: 0.85rem;
-  cursor: pointer;
   flex-shrink: 0;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
