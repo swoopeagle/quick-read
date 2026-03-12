@@ -59,7 +59,7 @@
      ============================================================= */
 
   function getRibbonState() {
-    return sessionStorage.getItem(SESSION_KEY) || 'expanded';
+    return sessionStorage.getItem(SESSION_KEY) || 'minimized';
   }
 
   function setRibbonState(state) {
