@@ -89,22 +89,21 @@
 
 #rsvp-pill {
   position: fixed;
-  right: 0;
-  top: 25vh;
+  right: 12px;
+  top: 8px;
   width: 36px;
-  height: 64px;
+  height: 44px;
   background: #1C1C1E;
   color: #4A90D9;
   border: 1px solid #48484A;
-  border-right: none;
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
   cursor: pointer;
   z-index: 999998;
-  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   transition: width 0.2s ease;
 }
 
@@ -114,7 +113,7 @@
 
 #rsvp-pill .tooltip {
   position: absolute;
-  right: 48px;
+  right: calc(100% + 8px);
   background: #1C1C1E;
   color: #F5F5F5;
   font-family: system-ui, sans-serif;
