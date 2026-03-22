@@ -13,6 +13,9 @@
   const WPM_STEP    = 25;
   const SESSION_KEY = 'rsvp-ribbon-state';
 
+  // Hostnames that render text to Canvas — Readability cannot extract from these
+  const CANVAS_HOSTS = /^(docs|slides|sheets)\.google\.com$/;
+
   // Noise selectors applied to extracted article HTML.
   // Intentionally precise — avoid broad substrings like [class*="ad"]
   // which match "reader", "loading", "gradient", "badge", etc.
@@ -92,7 +95,11 @@
   function createPill() {
     pill = document.createElement('div');
     pill.id = 'rsvp-pill';
-    pill.innerHTML = `<span>⚡</span><span class="tooltip">Open Speed Reader</span>`;
+    pill.innerHTML = `
+      <span>⚡</span>
+      <span class="tooltip">Open Speed Reader</span>
+      <span class="status-dot gray"></span>
+    `;
     pill.style.display = 'none';
 
     pill.addEventListener('click', () => {
@@ -100,6 +107,42 @@
     });
 
     document.body.appendChild(pill);
+  }
+
+  // Fast heuristic probe — does NOT run full Readability, keeps page-load cost near zero
+  function probeArticle() {
+    if (CANVAS_HOSTS.test(window.location.hostname)) return 'canvas';
+
+    for (const sel of ARTICLE_SELECTORS) {
+      try {
+        const el = document.querySelector(sel);
+        if (!el) continue;
+        const wordCount = (el.innerText || el.textContent || '')
+          .trim().split(/\s+/).filter(w => w.length > 0).length;
+        if (wordCount >= 200) return 'green';
+        if (wordCount >= 100) return 'amber';
+      } catch (_) {}
+    }
+    return 'gray';
+  }
+
+  const TOOLTIP_TEXT = {
+    green:  'Quick Read — article ready',
+    amber:  'Quick Read — partial content',
+    gray:   'Quick Read — may not extract',
+    canvas: 'Quick Read — canvas page, can\'t read',
+  };
+
+  function updatePillStatus(status) {
+    if (!pill) return;
+    const dot = pill.querySelector('.status-dot');
+    if (dot) dot.className = `status-dot ${status === 'canvas' ? 'amber' : status}`;
+    const tooltip = pill.querySelector('.tooltip');
+    if (tooltip) tooltip.textContent = TOOLTIP_TEXT[status] || 'Open Speed Reader';
+  }
+
+  function runProbe() {
+    updatePillStatus(probeArticle());
   }
 
   function minimizeRibbon() {
@@ -758,13 +801,29 @@
      FULLSCREEN LISTENER
      ============================================================= */
 
-  function enterQuickRead() {
+  async function enterQuickRead() {
     ribbonStateBeforeFullscreen = getRibbonState();
     hideRibbonAndPill();
     document.documentElement.style.overflow = 'hidden';
 
     // Request fullscreen for immersion — overlay shows regardless of whether it's granted
     document.documentElement.requestFullscreen().catch(() => {});
+
+    // Canvas-rendered pages — Readability cannot extract anything
+    if (CANVAS_HOSTS.test(window.location.hostname)) {
+      buildEmptyOverlayWithError(
+        'Quick Read cannot extract text from this page — content is rendered to canvas, not HTML.'
+      );
+      return;
+    }
+
+    // Wait for the page to finish loading (handles SPA hydration)
+    if (document.readyState !== 'complete') {
+      await new Promise(resolve => window.addEventListener('load', resolve, { once: true }));
+    }
+
+    // Short settle delay — gives lazy loaders and SPA frameworks time to inject content
+    await new Promise(resolve => setTimeout(resolve, 400));
 
     const article = extractArticle();
     if (article) {
@@ -784,7 +843,7 @@
     }
   });
 
-  function buildEmptyOverlayWithError() {
+  function buildEmptyOverlayWithError(message = 'Could not extract article content from this page.') {
     if (!shadowHost) {
       shadowHost = document.createElement('div');
       shadowHost.id = 'rsvp-host';
@@ -809,7 +868,7 @@
     rightPanel.innerHTML = `
       <div id="rsvp-display">
         <div id="rsvp-word" style="font-size:1.4rem;font-weight:normal;color:#A1A1AA;text-align:center;padding:2rem;">
-          Could not extract article content from this page.
+          ${message}
         </div>
       </div>
     `;
@@ -826,5 +885,12 @@
      ============================================================= */
 
   initRibbonAndPill();
+
+  // Run probe after page settles (1.5s gives SPAs and lazy loaders time to render)
+  setTimeout(runProbe, 1500);
+
+  // Re-probe on SPA navigation (route changes without full page reload)
+  window.addEventListener('popstate',   () => setTimeout(runProbe, 1000));
+  window.addEventListener('hashchange', () => setTimeout(runProbe, 1000));
 
 })();
