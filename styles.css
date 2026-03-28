@@ -107,7 +107,7 @@
   position: fixed;
   right: 12px;
   top: 8px;
-  width: 36px;
+  width: 12px;
   height: 44px;
   background: #1C1C1E;
   color: #4A90D9;
@@ -120,11 +120,13 @@
   cursor: pointer;
   z-index: 999998;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
   transition: width 0.2s ease;
 }
 
 #rsvp-pill:hover {
-  width: 44px;
+  width: 36px;
+  overflow: visible;
 }
 
 #rsvp-pill .tooltip {
