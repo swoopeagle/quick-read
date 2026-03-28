@@ -87,17 +87,20 @@
    PILL — injected into main document (not Shadow DOM)
    ============================================================ */
 
-/* Status dot — bottom-right corner of pill */
+/* Status dot — left edge at rest, slides right as pill expands */
 #rsvp-pill .status-dot {
   position: absolute;
   bottom: 5px;
-  right: 5px;
+  left: 2px;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   border: 1.5px solid #1C1C1E;
-  transition: background 0.4s ease;
+  transition: left 0.2s ease, background 0.4s ease;
   pointer-events: none;
+}
+#rsvp-pill:hover .status-dot {
+  left: 22px;
 }
 #rsvp-pill .status-dot.green { background: #34C759; }
 #rsvp-pill .status-dot.amber { background: #FF9F0A; }
